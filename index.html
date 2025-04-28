@@ -1,0 +1,1866 @@
+<html><head><base href="." /><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marketing Central Hub</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+<script>import Sortable from "https://esm.sh/sortablejs";
+
+const el = document.getElementById('dashboard-widgets');
+const sortable = Sortable.create(el, {
+  animation: 150,
+  ghostClass: 'blue-background-class'
+});
+
+const AnalyticsComponent = Vue.defineAsyncComponent(() =>
+  import('./components/AnalyticsComponent.vue')
+)
+
+const routes = [
+  {
+    path: '/analytics',
+    component: () => import('./views/Analytics.vue')
+  }
+]const url = '';
+const options = {
+	method: 'GET',
+	headers: {
+		'x-rapidapi-key': 'ef570a3765msh16434f4eab02191p16ef8bjsn32dfca968956',
+		'x-rapidapi-host': 'local-business-data.p.rapidapi.com'
+	}
+};
+
+try {
+	const response = await fetch(url, options);
+	const result = await response.text();
+	console.log(result);
+} catch (error) {
+	console.error(error);
+
+
+
+</script>
+<style>
+:root {
+    --primary: #2c3e50;
+    --secondary: #34495e;
+    --accent: #3498db;
+    --success: #2ecc71;
+    --warning: #f1c40f;
+    --danger: #e74c3c;
+    --light: #ecf0f1;
+}
+
+/* Add to existing CSS */
+.notifications-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+    background: var(--success);
+    color: white;
+}
+
+.notification.error {
+    background: var(--danger);
+    color: white;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f6fa;
+    color: var(--primary);
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background: var(--primary);
+    color: white;
+    padding: 1.5rem;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+}
+
+.sidebar-profile {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-profile-info {
+    color: white;
+}
+
+.sidebar-profile-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.sidebar-profile-title {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.nav-item {
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-item:hover {
+    background: var(--secondary);
+}
+
+.nav-item.active {
+    background: var(--accent);
+}
+
+.main-content {
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chart-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.campaigns-list {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.campaign-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--light);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+}
+
+.status-active {
+    background: var(--success);
+    color: white;
+}
+
+.status-pending {
+    background: var(--warning);
+    color: var(--primary);
+}
+
+.status-ended {
+    background: var(--danger);
+    color: white;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.kpi-card:hover {
+    animation: pulse 1s infinite;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.audience-segments {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.segment-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.settings-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--light);
+    border-radius: 4px;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+}
+
+.funnel-stage {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.custom-api-form {
+    border: 1px solid var(--light);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-danger {
+    background: var(--danger);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+}
+
+.btn-test {
+    background: var(--success);
+}
+
+.profile-picture-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.data-table {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 1.5rem;
+    overflow-x: auto;
+}
+
+.data-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--light);
+}
+
+.data-source-connection {
+    margin-bottom: 2rem;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.metric-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 0.5rem 0;
+}
+
+.metric-change {
+    font-size: 0.9rem;
+    color: var(--success);
+}
+
+.metric-change.negative {
+    color: var(--danger);
+}
+
+.attribution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.attribution-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.performance-metrics,
+.attribution-analysis {
+    margin-bottom: 2rem;
+}
+
+.campaign-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--light);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.campaign-metrics {
+    margin-top: 2rem;
+}
+</style>
+</head>
+<body>
+<div id="app" class="dashboard">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Marketing Hub</h2>
+        </div>
+        <div class="sidebar-profile">
+            <img :src="profile.avatarUrl || 'https://via.placeholder.com/150'" alt="User avatar" class="sidebar-avatar">
+            <div class="sidebar-profile-info">
+                <div class="sidebar-profile-name">{{ profile.fullName }}</div>
+                <div class="sidebar-profile-title">{{ profile.jobTitle }}</div>
+            </div>
+        </div>
+        <nav>
+            <div class="nav-item" :class="{ active: currentTab === 'dashboard' }" @click="currentTab = 'dashboard'">
+                <i class="mdi mdi-view-dashboard"></i>
+                Dashboard
+            </div>
+            <div class="nav-item" :class="{ active: currentTab === 'analytics' }" @click="currentTab = 'analytics'">
+                <i class="mdi mdi-chart-bar"></i>
+                Analytics
+            </div>
+            <div class="nav-item" :class="{ active: currentTab === 'campaigns' }" @click="currentTab = 'campaigns'">
+                <i class="mdi mdi-bullhorn"></i>
+                Campaigns
+            </div>
+            <div class="nav-item" :class="{ active: currentTab === 'audience' }" @click="currentTab = 'audience'">
+                <i class="mdi mdi-account-group"></i>
+                Audience
+            </div>
+            <div class="nav-item" :class="{ active: currentTab === 'profile' }" @click="currentTab = 'profile'">
+                <i class="mdi mdi-account"></i>
+                Profile
+            </div>
+            <div class="nav-item" :class="{ active: currentTab === 'settings' }" @click="currentTab = 'settings'">
+                <i class="mdi mdi-cog"></i>
+                Settings
+            </div>
+        </nav>
+    </aside>
+
+
+    <main class="main-content">
+        <!-- Add inside <main class="main-content"> before other content -->
+        <div class="notifications-container">
+            <div v-for="notification in notifications" 
+                 :key="notification.id" 
+                 :class="['notification', notification.type]">
+                {{ notification.message }}
+            </div>
+        </div>
+        <!-- Dashboard Tab -->
+        <div class="tab-content" :class="{ active: currentTab === 'dashboard' }">
+            <div class="header">
+                <h1>Dashboard Overview</h1>
+                <div class="date-picker">
+                    Last 30 Days ▼
+                </div>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h3>Total Reach</h3>
+                    <p class="kpi-value">2.4M</p>
+                    <p class="kpi-change">+12.5%</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>Engagement Rate</h3>
+                    <p class="kpi-value">4.8%</p>
+                    <p class="kpi-change">+0.6%</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>Conversions</h3>
+                    <p class="kpi-value">12,543</p>
+                    <p class="kpi-change">+8.2%</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>ROI</h3>
+                    <p class="kpi-value">324%</p>
+                    <p class="kpi-change">+15.3%</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <div class="campaigns-list">
+                <h2>Active Campaigns</h2>
+                <div class="campaign-item">
+                    <div>
+                        <h3>Summer Sale 2023</h3>
+                        <p>Email + Social Media</p>
+                    </div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+                <div class="campaign-item">
+                    <div>
+                        <h3>Product Launch</h3>
+                        <p>PPC + Display</p>
+                    </div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="campaign-item">
+                    <div>
+                        <h3>Brand Awareness Q2</h3>
+                        <p>Social Media</p>
+                    </div>
+                    <span class="status-badge status-ended">Ended</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="tab-content" :class="{ active: currentTab === 'analytics' }">
+            <div class="header">
+                <h1>Analytics</h1>
+                <div class="date-picker">Last 30 Days ▼</div>
+            </div>
+            
+            <div class="data-source-connection">
+                <div class="settings-card">
+                    <h2>Data Source Connection</h2>
+                    <div class="form-group">
+                        <label>Data Source Type</label>
+                        <select v-model="analyticsDataSource.type">
+                            <option value="api">REST API</option>
+                            <option value="database">Database</option>
+                            <option value="file">File Upload</option>
+                        </select>
+                    </div>
+                    <div class="form-group" v-if="analyticsDataSource.type === 'api'">
+                        <label>API Endpoint</label>
+                        <input type="text" v-model="analyticsDataSource.endpoint" placeholder="https://api.example.com/data">
+                    </div>
+                    <div class="form-group">
+                        <label>Refresh Rate (minutes)</label>
+                        <input type="number" v-model="analyticsDataSource.refreshRate" min="1">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-test" @click="testDataConnection">Test Connection</button>
+                        <button class="btn" @click="connectDataSource">Connect</button>
+                    </div>
+                </div>
+
+                <div class="chart-container" v-if="analyticsData.length">
+                    <h2>Connected Data Visualization</h2>
+                    <canvas id="customDataChart"></canvas>
+                </div>
+
+                <div class="data-table" v-if="analyticsData.length">
+                    <h2>Data Table</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th v-for="column in dataColumns" :key="column">{{column}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="row in analyticsData" :key="row.id">
+                                <td v-for="column in dataColumns" :key="column">{{row[column]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <canvas id="channelChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="conversionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="performance-metrics">
+                <div class="settings-card">
+                    <h2>Advanced Metrics</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <h3>Cost Per Acquisition</h3>
+                            <p class="metric-value">$12.45</p>
+                            <p class="metric-change">-2.3%</p>
+                        </div>
+                        <div class="metric-item">
+                            <h3>Customer Lifetime Value</h3>
+                            <p class="metric-value">$856.20</p>
+                            <p class="metric-change">+15.7%</p>
+                        </div>
+                        <div class="metric-item">
+                            <h3>Return on Ad Spend</h3>
+                            <p class="metric-value">387%</p>
+                            <p class="metric-change">+5.2%</p>
+                        </div>
+                        <div class="metric-item">
+                            <h3>Click-Through Rate</h3>
+                            <p class="metric-value">4.2%</p>
+                            <p class="metric-change">+0.8%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attribution-analysis">
+                <div class="settings-card">
+                    <h2>Attribution Analysis</h2>
+                    <div class="attribution-grid">
+                        <div class="attribution-item">
+                            <h3>First Touch</h3>
+                            <p>45% Social Media</p>
+                        </div>
+                        <div class="attribution-item">
+                            <h3>Last Touch</h3>
+                            <p>38% Direct</p>
+                        </div>
+                        <div class="attribution-item">
+                            <h3>Linear</h3>
+                            <p>32% Email</p>
+                        </div>
+                        <div class="attribution-item">
+                            <h3>Time Decay</h3>
+                            <p>28% PPC</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns Tab -->
+        <div class="tab-content" :class="{ active: currentTab === 'campaigns' }">
+            <div class="header">
+                <h1>Campaign Management</h1>
+                <button class="btn">Create Campaign</button>
+            </div>
+
+            <div class="campaigns-list">
+                <div class="campaign-item" v-for="campaign in campaigns">
+                    <div>
+                        <h3>{{ campaign.name }}</h3>
+                        <p>{{ campaign.type }}</p>
+                    </div>
+                    <span class="status-badge" :class="'status-' + campaign.status.toLowerCase()">
+                        {{ campaign.status }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="campaign-metrics">
+                <div class="settings-card">
+                    <h2>Campaign Performance Metrics</h2>
+                    <div class="campaign-stats-grid">
+                        <div class="stat-card">
+                            <h3>Email Campaigns</h3>
+                            <div class="stat-item">
+                                <span>Open Rate</span>
+                                <span>24.8%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Click Rate</span>
+                                <span>3.2%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Bounce Rate</span>
+                                <span>0.8%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>Social Campaigns</h3>
+                            <div class="stat-item">
+                                <span>Engagement Rate</span>
+                                <span>5.7%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Share Rate</span>
+                                <span>1.2%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Follower Growth</span>
+                                <span>+824</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h3>PPC Campaigns</h3>
+                            <div class="stat-item">
+                                <span>Click-Through Rate</span>
+                                <span>2.4%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Cost per Click</span>
+                                <span>$1.45</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Quality Score</span>
+                                <span>8/10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audience Tab -->
+        <div class="tab-content" :class="{ active: currentTab === 'audience' }">
+            <div class="header">
+                <h1>Audience Insights</h1>
+                <button class="btn">Create Segment</button>
+            </div>
+
+            <div class="audience-segments">
+                <div class="segment-card">
+                    <h3>High-Value Customers</h3>
+                    <p>125,430 contacts</p>
+                </div>
+                <div class="segment-card">
+                    <h3>Newsletter Subscribers</h3>
+                    <p>89,254 contacts</p>
+                </div>
+                <div class="segment-card">
+                    <h3>Social Followers</h3>
+                    <p>245,129 contacts</p>
+                </div>
+                <div class="segment-card">
+                    <h3>Cart Abandoners</h3>
+                    <p>15,438 contacts</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="audienceChart" style="width:400px;"></canvas>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div class="tab-content" :class="{ active: currentTab === 'profile' }">
+            <div class="header">
+                <h1>User Profile</h1>
+                <button class="btn" @click="saveProfile">Save Changes</button>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h2>Personal Information</h2>
+                    <div class="form-group">
+                        <label>Profile Picture</label>
+                        <div class="profile-picture-container">
+                            <img :src="profile.avatarUrl || 'https://via.placeholder.com/150'" alt="Profile picture" class="profile-avatar">
+                            <input 
+                                type="file" 
+                                ref="fileInput" 
+                                style="display: none" 
+                                @change="handleAvatarUpload" 
+                                accept="image/*"
+                            >
+                            <button class="btn btn-secondary" @click="$refs.fileInput.click()">Change Picture</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" v-model="profile.fullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" v-model="profile.jobTitle">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" v-model="profile.email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" v-model="profile.phone">
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h2>Security</h2>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" v-model="profile.currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" v-model="profile.newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" v-model="profile.confirmPassword">
+                    </div>
+                    <button class="btn btn-secondary" @click="changePassword">Update Password</button>
+                </div>
+
+                <div class="settings-card">
+                    <h2>Preferences</h2>
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select v-model="profile.language">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Notifications</label>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" v-model="profile.notifications.campaigns">
+                                Campaign Updates
+                            </label>
+                            <label>
+                                <input type="checkbox" v-model="profile.notifications.reports">
+                                Weekly Reports
+                            </label>
+                            <label>
+                                <input type="checkbox" v-model="profile.notifications.alerts">
+                                System Alerts
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div class="tab-content" :class="{ active: currentTab === 'settings' }">
+            <div class="header">
+                <h1>Settings</h1>
+                <button class="btn" @click="saveSettings">Save Changes</button>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Personal Information -->
+                <div class="settings-card">
+                    <h2>Personal Information</h2>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" v-model="settings.personal.fullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" v-model="settings.personal.jobTitle">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" v-model="settings.personal.email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" v-model="settings.personal.phone">
+                    </div>
+                </div>
+
+                <!-- Company Information -->
+                <div class="settings-card">
+                    <h2>Company Information</h2>
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" v-model="settings.company.name">
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="url" v-model="settings.company.website">
+                    </div>
+                    <div class="form-group">
+                        <label>Industry</label>
+                        <select v-model="settings.company.industry">
+                            <option>Technology</option>
+                            <option>Retail</option>
+                            <option>Healthcare</option>
+                            <option>Finance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Email Settings -->
+                <div class="settings-card">
+                    <h2>Email Settings</h2>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" v-model="settings.email.notifications">
+                            Receive Notifications
+                        </label>
+                        <label>
+                            <input type="checkbox" v-model="settings.email.marketingEmails">
+                            Marketing Updates
+                        </label>
+                        <label>
+                            <input type="checkbox" v-model="settings.email.digestEmails">
+                            Daily Digest
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Report Frequency</label>
+                        <select v-model="settings.email.reportFrequency">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="settings-card">
+                    <h2>Security</h2>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" v-model="settings.security.twoFactorAuth">
+                            Enable Two-Factor Authentication
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Session Timeout (minutes)</label>
+                        <input type="number" v-model="settings.security.sessionTimeout">
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="settings-card">
+                    <h2>Preferences</h2>
+                    <div class="form-group">
+                        <label>Theme</label>
+                        <select v-model="settings.preferences.theme">
+                            <option value="light">Light Theme</option>
+                            <option value="dark">Dark Theme</option>
+                        </select>
+                    </div>
+                    <h3>IDE Integrations</h3>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" v-model="settings.preferences.ideIntegrations.vscode">
+                            VS Code
+                        </label>
+                        <label>
+                            <input type="checkbox" v-model="settings.preferences.ideIntegrations.sublime">
+                            Sublime Text
+                        </label>
+                        <label>
+                            <input type="checkbox" v-model="settings.preferences.ideIntegrations.intellij">
+                            IntelliJ
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Account Settings -->
+                <div class="settings-card">
+                    <h2>Account Settings</h2>
+                    <div class="form-group">
+                        <label>Current Plan</label>
+                        <input type="text" v-model="settings.account.plan" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Billing Cycle</label>
+                        <select v-model="settings.account.billingCycle">
+                            <option value="monthly">Monthly</option>
+                            <option value="annual">Annual</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom APIs -->
+                <div class="settings-card">
+                    <h2>Custom APIs</h2>
+                    <div v-for="(api, index) in settings.integrations.customApis" 
+                         :key="index" 
+                         class="custom-api-form">
+                        <div class="form-group">
+                            <label>API Name</label>
+                            <input type="text" v-model="api.name">
+                        </div>
+                        <div class="form-group">
+                            <label>Endpoint URL</label>
+                            <input type="text" v-model="api.endpoint">
+                        </div>
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" v-model="api.apiKey">
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-test" @click="testApiConnection(api)">Test Connection</button>
+                            <button class="btn btn-danger" @click="removeCustomApi(index)">Remove</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" @click="addCustomApi">Add New API</button>
+                </div>
+
+                <!-- Support -->
+                <div class="settings-card">
+                    <h2>Chat & Email Support</h2>
+                    <div class="form-group">
+                        <label>Preferred Contact Method</label>
+                        <select v-model="settings.support.preferredChannel">
+                            <option value="email">Email</option>
+                            <option value="chat">Chat</option>
+                        </select>
+                    </div>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" v-model="settings.support.chatNotifications">
+                            Enable Chat Notifications
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            currentTab: 'dashboard',
+            profile: {
+                avatarUrl: '',
+                fullName: 'John Doe',
+                jobTitle: 'Marketing Manager',
+                email: 'john.doe@example.com',
+                phone: '+1 (555) 123-4567',
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: '',
+                language: 'en',
+                notifications: {
+                    campaigns: true,
+                    reports: true,
+                    alerts: false
+                }
+            },
+            campaigns: [
+                { name: 'Summer Sale 2023', type: 'Email + Social Media', status: 'Active' },
+                { name: 'Product Launch', type: 'PPC + Display', status: 'Pending' },
+                { name: 'Brand Awareness Q2', type: 'Social Media', status: 'Ended' },
+                { name: 'Holiday Campaign', type: 'Omnichannel', status: 'Pending' },
+                { name: 'Loyalty Program', type: 'Email', status: 'Active' }
+            ],
+            notifications: [],
+            // Add to data() function
+            settings: {
+                personal: {
+                    fullName: 'John Doe',
+                    jobTitle: 'Marketing Manager',
+                    email: 'john.doe@example.com',
+                    phone: '+1 (555) 123-4567',
+                    avatarUrl: ''
+                },
+                company: {
+                    name: 'Acme Corp',
+                    website: '',
+                    industry: '',
+                    size: ''
+                },
+                email: {
+                    notifications: true,
+                    marketingEmails: true,
+                    reportFrequency: 'weekly',
+                    digestEmails: true
+                },
+                security: {
+                    twoFactorAuth: false,
+                    sessionTimeout: '30',
+                    passwordExpiry: '90',
+                    lastPasswordChange: ''
+                },
+                preferences: {
+                    theme: 'light',
+                    language: 'en',
+                    ideIntegrations: {
+                        vscode: false,
+                        sublime: false,
+                        intellij: false
+                    },
+                    customIntegrations: []
+                },
+                account: {
+                    plan: 'Professional',
+                    billingCycle: 'monthly',
+                    subscriptionStatus: 'active'
+                },
+                integrations: {
+                    googleAnalytics: '',
+                    facebookPixel: '',
+                    customApis: []
+                },
+                support: {
+                    preferredChannel: 'email',
+                    timezone: 'UTC-8',
+                    chatNotifications: true
+                }
+            },
+
+            analyticsDataSource: {
+                type: 'api',
+                endpoint: '',
+                refreshRate: 5,
+                connected: false
+            },
+            analyticsData: [],
+            initializeAllCharts() {
+                // Performance Chart
+                const performanceCtx = document.getElementById('performanceChart')?.getContext('2d');
+                if (performanceCtx) {
+                    new Chart(performanceCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Performance',
+                                data: [12, 19, 3, 5, 2, 3],
+                                borderColor: '#3498db',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Overall Performance'
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Channel Chart
+                const channelCtx = document.getElementById('channelChart')?.getContext('2d');
+                if (channelCtx) {
+                    new Chart(channelCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Social', 'Email', 'PPC', 'Direct', 'Organic'],
+                            datasets: [{
+                                label: 'Channel Performance',
+                                data: [65, 59, 80, 81, 56],
+                                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Channel Distribution'
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Conversion Chart
+                const conversionCtx = document.getElementById('conversionChart')?.getContext('2d');
+                if (conversionCtx) {
+                    new Chart(conversionCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                label: 'Conversions',
+                                data: [12, 19, 3, 5, 2, 3, 7],
+                                borderColor: '#2ecc71',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Weekly Conversions'
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Audience Chart
+                const audienceCtx = document.getElementById('audienceChart')?.getContext('2d');
+                if (audienceCtx) {
+                    new Chart(audienceCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Desktop', 'Mobile', 'Tablet'],
+                            datasets: [{
+                                data: [300, 500, 200],
+                                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c'],
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Audience Breakdown'
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            dataColumns: [],
+            dataRefreshInterval: null
+        }
+    },
+    mounted() {
+        this.initializeAllCharts();
+        this.loadAllData(); // Load saved data on startup
+        if (this.analyticsDataSource.connected) {
+            this.setupDataRefresh();
+        }
+    },
+    unmounted() {
+        if (this.dataRefreshInterval) {
+            clearInterval(this.dataRefreshInterval);
+        }
+    },
+    methods: {
+        async loadAllData() {
+            try {
+                const sections = ['profile', 'settings', 'analytics'];
+                for (const section of sections) {
+                    const response = await fetch(`http://localhost:3000/api/load/${section}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        this[section] = { ...this[section], ...data };
+                    }
+                }
+                this.showNotification('Data loaded successfully', 'success');
+            } catch (err) {
+                this.showNotification('Error loading data: ' + err.message, 'error');
+            }
+        },
+
+        async saveProfile() {
+            try {
+                const response = await fetch('http://localhost:3000/api/save/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.profile)
+                });
+                
+                if (response.ok) {
+                    this.showNotification('Profile saved successfully!', 'success');
+                } else {
+                    throw new Error('Failed to save profile');
+                }
+            } catch (err) {
+                this.showNotification('Error saving profile: ' + err.message, 'error');
+            }
+        },
+
+        async saveSettings() {
+            try {
+                const response = await fetch('http://localhost:3000/api/save/settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.settings)
+                });
+                
+                if (response.ok) {
+                    this.showNotification('Settings saved successfully!', 'success');
+                } else {
+                    throw new Error('Failed to save settings');
+                }
+            } catch (err) {
+                this.showNotification('Error saving settings: ' + err.message, 'error');
+            }
+        },
+
+        saveSettings() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 1000);
+            })
+            .then(() => {
+                this.showNotification('Settings saved successfully!', 'success');
+            })
+            .catch(err => {
+                this.showNotification('Error saving settings', 'error');
+            });
+        },
+
+        showNotification(message, type = 'info') {
+            const id = Date.now();
+            this.notifications.push({ id, message, type });
+            setTimeout(() => {
+                this.notifications = this.notifications.filter(n => n.id !== id);
+            }, 3000);
+        },
+
+        addCustomApi() {
+            this.settings.integrations.customApis.push({
+                name: '',
+                endpoint: '',
+                apiKey: '',
+                active: true
+            });
+        },
+
+        removeCustomApi(index) {
+            this.settings.integrations.customApis.splice(index, 1);
+        },
+
+        testApiConnection(api) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                    this.showNotification(`Successfully connected to ${api.name}`, 'success');
+                }, 1000);
+            });
+        },
+
+        async testDataConnection() {
+            try {
+                const response = await this.fetchDataFromSource();
+                if (response) {
+                    this.showNotification('Connection test successful!', 'success');
+                }
+            } catch (error) {
+                this.showNotification('Connection test failed: ' + error.message, 'error');
+            }
+        },
+
+        async connectDataSource() {
+            try {
+                await this.fetchDataFromSource();
+                this.analyticsDataSource.connected = true;
+                this.setupDataRefresh();
+                this.showNotification('Data source connected successfully!', 'success');
+            } catch (error) {
+                this.showNotification('Failed to connect data source: ' + error.message, 'error');
+            }
+        },
+
+        async fetchDataFromSource() {
+            if (this.analyticsDataSource.type === 'api' && this.analyticsDataSource.endpoint) {
+                try {
+                    const response = await fetch(this.analyticsDataSource.endpoint);
+                    const data = await response.json();
+                    this.analyticsData = data;
+                    this.dataColumns = Object.keys(data[0] || {});
+                    this.updateCustomDataChart();
+                    return data;
+                } catch (error) {
+                    throw new Error('Failed to fetch data from API');
+                }
+            }
+        },
+
+        setupDataRefresh() {
+            if (this.dataRefreshInterval) {
+                clearInterval(this.dataRefreshInterval);
+            }
+            
+            const refreshRate = this.analyticsDataSource.refreshRate * 60 * 1000; // Convert to milliseconds
+            this.dataRefreshInterval = setInterval(() => {
+                this.fetchDataFromSource();
+            }, refreshRate);
+        },
+
+        updateCustomDataChart() {
+            const ctx = document.getElementById('customDataChart')?.getContext('2d');
+            if (ctx && this.analyticsData.length) {
+                const numericColumns = this.dataColumns.filter(col => 
+                    typeof this.analyticsData[0][col] === 'number'
+                );
+                
+                if (numericColumns.length >= 2) {
+                    new Chart(ctx, {
+                        type: 'scatter',
+                        data: {
+                            datasets: [{
+                                label: 'Custom Data',
+                                data: this.analyticsData.map(row => ({
+                                    x: row[numericColumns[0]],
+                                    y: row[numericColumns[1]]
+                                })),
+                                backgroundColor: '#3498db'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: `${numericColumns[0]} vs ${numericColumns[1]}`
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+}).mount('#app');
+</script>
+
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            currentTab: 'dashboard',
+            profile: {
+                avatarUrl: '',
+                fullName: 'John Doe',
+                jobTitle: 'Marketing Manager',
+                email: 'john.doe@example.com',
+                phone: '+1 (555) 123-4567',
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: '',
+                language: 'en',
+                notifications: {
+                    campaigns: true,
+                    reports: true,
+                    alerts: false
+                }
+            },
+            campaigns: [
+                { name: 'Summer Sale 2023', type: 'Email + Social Media', status: 'Active' },
+                { name: 'Product Launch', type: 'PPC + Display', status: 'Pending' },
+                { name: 'Brand Awareness Q2', type: 'Social Media', status: 'Ended' },
+                { name: 'Holiday Campaign', type: 'Omnichannel', status: 'Pending' },
+                { name: 'Loyalty Program', type: 'Email', status: 'Active' }
+            ],
+            notifications: [],
+            // Add to data() function
+            settings: {
+                personal: {
+                    fullName: 'John Doe',
+                    jobTitle: 'Marketing Manager',
+                    email: 'john.doe@example.com',
+                    phone: '+1 (555) 123-4567',
+                    avatarUrl: ''
+                },
+                company: {
+                    name: 'Acme Corp',
+                    website: '',
+                    industry: '',
+                    size: ''
+                },
+                email: {
+                    notifications: true,
+                    marketingEmails: true,
+                    reportFrequency: 'weekly',
+                    digestEmails: true
+                },
+                security: {
+                    twoFactorAuth: false,
+                    sessionTimeout: '30',
+                    passwordExpiry: '90',
+                    lastPasswordChange: ''
+                },
+                preferences: {
+                    theme: 'light',
+                    language: 'en',
+                    ideIntegrations: {
+                        vscode: false,
+                        sublime: false,
+                        intellij: false
+                    },
+                    customIntegrations: []
+                },
+                account: {
+                    plan: 'Professional',
+                    billingCycle: 'monthly',
+                    subscriptionStatus: 'active'
+                },
+                integrations: {
+                    googleAnalytics: '',
+                    facebookPixel: '',
+                    customApis: []
+                },
+                support: {
+                    preferredChannel: 'email',
+                    timezone: 'UTC-8',
+                    chatNotifications: true
+                }
+            },
+
+            analyticsDataSource: {
+                type: 'api',
+                endpoint: '',
+                refreshRate: 5,
+                connected: false
+            },
+            analyticsData: [],
+            initializeAllCharts() {
+                // Performance Chart
+                const performanceCtx = document.getElementById('performanceChart')?.getContext('2d');
+                if (performanceCtx) {
+                    new Chart(performanceCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                            datasets: [{
+                                label: 'Performance',
+                                data: [12, 19, 3, 5, 2, 3],
+                                borderColor: '#3498db',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Overall Performance'
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Channel Chart
+                const channelCtx = document.getElementById('channelChart')?.getContext('2d');
+                if (channelCtx) {
+                    new Chart(channelCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Social', 'Email', 'PPC', 'Direct', 'Organic'],
+                            datasets: [{
+                                label: 'Channel Performance',
+                                data: [65, 59, 80, 81, 56],
+                                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Channel Distribution'
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Conversion Chart
+                const conversionCtx = document.getElementById('conversionChart')?.getContext('2d');
+                if (conversionCtx) {
+                    new Chart(conversionCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                label: 'Conversions',
+                                data: [12, 19, 3, 5, 2, 3, 7],
+                                borderColor: '#2ecc71',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Weekly Conversions'
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Audience Chart
+                const audienceCtx = document.getElementById('audienceChart')?.getContext('2d');
+                if (audienceCtx) {
+                    new Chart(audienceCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Desktop', 'Mobile', 'Tablet'],
+                            datasets: [{
+                                data: [300, 500, 200],
+                                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c'],
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Audience Breakdown'
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            dataColumns: [],
+            dataRefreshInterval: null
+        }
+    },
+    mounted() {
+        this.initializeAllCharts();
+        this.loadAllData(); // Load saved data on startup
+        if (this.analyticsDataSource.connected) {
+            this.setupDataRefresh();
+        }
+    },
+    unmounted() {
+        if (this.dataRefreshInterval) {
+            clearInterval(this.dataRefreshInterval);
+        }
+    },
+    methods: {
+        async loadAllData() {
+            try {
+                const sections = ['profile', 'settings', 'analytics'];
+                for (const section of sections) {
+                    const response = await fetch(`http://localhost:3000/api/load/${section}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        this[section] = { ...this[section], ...data };
+                    }
+                }
+                this.showNotification('Data loaded successfully', 'success');
+            } catch (err) {
+                this.showNotification('Error loading data: ' + err.message, 'error');
+            }
+        },
+
+        async saveProfile() {
+            try {
+                const response = await fetch('http://localhost:3000/api/save/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.profile)
+                });
+                
+                if (response.ok) {
+                    this.showNotification('Profile saved successfully!', 'success');
+                } else {
+                    throw new Error('Failed to save profile');
+                }
+            } catch (err) {
+                this.showNotification('Error saving profile: ' + err.message, 'error');
+            }
+        },
+
+        async saveSettings() {
+            try {
+                const response = await fetch('http://localhost:3000/api/save/settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.settings)
+                });
+                
+                if (response.ok) {
+                    this.showNotification('Settings saved successfully!', 'success');
+                } else {
+                    throw new Error('Failed to save settings');
+                }
+            } catch (err) {
+                this.showNotification('Error saving settings: ' + err.message, 'error');
+            }
+        },
+
+        saveSettings() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 1000);
+            })
+            .then(() => {
+                this.showNotification('Settings saved successfully!', 'success');
+            })
+            .catch(err => {
+                this.showNotification('Error saving settings', 'error');
+            });
+        },
+
+        showNotification(message, type = 'info') {
+            const id = Date.now();
+            this.notifications.push({ id, message, type });
+            setTimeout(() => {
+                this.notifications = this.notifications.filter(n => n.id !== id);
+            }, 3000);
+        },
+
+        addCustomApi() {
+            this.settings.integrations.customApis.push({
+                name: '',
+                endpoint: '',
+                apiKey: '',
+                active: true
+            });
+        },
+
+        removeCustomApi(index) {
+            this.settings.integrations.customApis.splice(index, 1);
+        },
+
+        testApiConnection(api) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                    this.showNotification(`Successfully connected to ${api.name}`, 'success');
+                }, 1000);
+            });
+        },
+
+        async testDataConnection() {
+            try {
+                const response = await this.fetchDataFromSource();
+                if (response) {
+                    this.showNotification('Connection test successful!', 'success');
+                }
+            } catch (error) {
+                this.showNotification('Connection test failed: ' + error.message, 'error');
+            }
+        },
+
+        async connectDataSource() {
+            try {
+                await this.fetchDataFromSource();
+                this.analyticsDataSource.connected = true;
+                this.setupDataRefresh();
+                this.showNotification('Data source connected successfully!', 'success');
+            } catch (error) {
+                this.showNotification('Failed to connect data source: ' + error.message, 'error');
+            }
+        },
+
+        async fetchDataFromSource() {
+            if (this.analyticsDataSource.type === 'api' && this.analyticsDataSource.endpoint) {
+                try {
+                    const response = await fetch(this.analyticsDataSource.endpoint);
+                    const data = await response.json();
+                    this.analyticsData = data;
+                    this.dataColumns = Object.keys(data[0] || {});
+                    this.updateCustomDataChart();
+                    return data;
+                } catch (error) {
+                    throw new Error('Failed to fetch data from API');
+                }
+            }
+        },
+
+        setupDataRefresh() {
+            if (this.dataRefreshInterval) {
+                clearInterval(this.dataRefreshInterval);
+            }
+            
+            const refreshRate = this.analyticsDataSource.refreshRate * 60 * 1000; // Convert to milliseconds
+            this.dataRefreshInterval = setInterval(() => {
+                this.fetchDataFromSource();
+            }, refreshRate);
+        },
+
+        updateCustomDataChart() {
+            const ctx = document.getElementById('customDataChart')?.getContext('2d');
+            if (ctx && this.analyticsData.length) {
+                const numericColumns = this.dataColumns.filter(col => 
+                    typeof this.analyticsData[0][col] === 'number'
+                );
+                
+                if (numericColumns.length >= 2) {
+                    new Chart(ctx, {
+                        type: 'scatter',
+                        data: {
+                            datasets: [{
+                                label: 'Custom Data',
+                                data: this.analyticsData.map(row => ({
+                                    x: row[numericColumns[0]],
+                                    y: row[numericColumns[1]]
+                                })),
+                                backgroundColor: '#3498db'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: `${numericColumns[0]} vs ${numericColumns[1]}`
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+}).mount('#app');
+</script>
+</body>
+</html>
+
+
+
